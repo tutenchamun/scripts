@@ -23,4 +23,4 @@ modal () {
 }
 
 
-modal && find . -type f  -regex '.*\.\(mkv\|avi\)' -execdir sh -c 'mediainfo --Output=XML --BOM --LogFile="{}".mediainfo.xml "{}"; xmllint --format "{}.mediainfo.xml" --output "{}.mediainfo.xml"' \;
+modal && find . -type f -regex '.*\.\(mkv\|avi\)' -execdir sh -c 'mediainfo --Output=XML --BOM --LogFile="{}".mediainfo.xml "{}"; xmllint --format "{}.mediainfo.xml" --output "{}.mediainfo.xml"' \;
