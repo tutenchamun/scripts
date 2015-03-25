@@ -1,0 +1,26 @@
+#!/bin/bash
+
+version=1.00.00
+
+echo "MediaInfo Extrator (${0##*/} v$version)"
+command -v mediainfo >/dev/null 2>&1 || { echo >&2 "'mediainfo' required. aborting ..."; exit 1; }
+IFS=v read _ mediainfo_version <<< $(mediainfo --version)
+echo "MediaInfo version found: ${mediainfo_version}"
+
+command -v xmllint >/dev/null 2>&1 || { echo >&2 "'xmllint' required. aborting ..."; exit 1; }
+echo "xmllint found"
+
+modal () {
+    read -r -p "${1:-Create *MOVIENAME*.meidainfo.xml for all media in \"$(pwd)\" ? (y/N) } " response
+    case $response in
+        [yY][eE][sS]|[yY]) 
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac
+}
+
+
+modal && find . -type f  -regex '.*\.\(mkv\|avi\)' -execdir sh -c 'mediainfo --Output=XML --BOM --LogFile="{}".mediainfo.xml "{}"; xmllint --format "{}.mediainfo.xml" --output "{}.mediainfo.xml"' \;
